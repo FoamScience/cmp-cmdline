@@ -122,7 +122,11 @@ local definitions = {
       -- In this case, the `vim.fn.getcompletion` will return only `get_query` for `vim.treesitter.get_|`.
       -- We should detect `vim.treesitter.` and `get_query` separately.
       -- TODO: The `\h\w*` was choosed by huristic. We should consider more suitable detection.
-      local fixed_input = arglead
+      local fixed_input
+      do
+        local suffix_pos = vim.regex([[\h\w*$]]):match_str(arglead)
+        fixed_input = string.sub(arglead, 1, suffix_pos or #arglead)
+      end
 
       -- The `vim.fn.getcompletion` does not return `*no*cursorline` option.
       -- cmp-cmdline corrects `no` prefix for option name.
